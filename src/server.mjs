@@ -16,6 +16,7 @@ import { renderStandaloneProduct, renderShopLanding } from "./product-renderer.m
 import { runAutopilot } from "./autopilot-core.mjs";
 
 const app = express();
+app.set("trust proxy", 1);
 const PORT = Number(process.env.PORT || 3000);
 const BASE_URL = process.env.PUBLIC_BASE_URL || (process.env.RENDER_EXTERNAL_HOSTNAME ? `https://${process.env.RENDER_EXTERNAL_HOSTNAME}` : `http://localhost:${PORT}`);
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "";
