@@ -1,0 +1,29 @@
+name: RevenuePilot Smoke
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Wait for Render auto-deploy
+        run: sleep 55
+      - name: Health endpoint
+        run: |
+          set -euo pipefail
+          BODY=$(curl --fail --silent --show-error --retry 4 --retry-delay 8 --max-time 30 https://revenuepilot-4ixc.onrender.com/health)
+          echo "$BODY"
+          echo "$BODY" | grep '"ok":true'
+      - name: Public status endpoint
+        run: |
+          set -euo pipefail
+          BODY=$(curl --fail --silent --show-error --retry 4 --retry-delay 8 --max-time 30 https://revenuepilot-4ixc.onrender.com/api/status)
+          echo "$BODY"
+          echo "$BODY" | grep '"authenticated":false'
+      - name: Production status page
+        run: |
+          set -euo pipefail
+          curl --fail --silent --show-error --retry 4 --retry-delay 8 --max-time 30 https://revenuepilot-4ixc.onrender.com/setup.html | grep 'Estado de producción'
