@@ -50,11 +50,11 @@ RevenuePilot usa PostgreSQL estándar. El Blueprint de Render enlaza automática
 - Health: `/health`
 - Región: Frankfurt
 
-El botón **Deploy to Render** usa el `render.yaml` del repositorio. En el primer despliegue Render solicitará únicamente los secretos marcados con `sync: false`.
+El botón **Deploy to Render** usa el `render.yaml` del repositorio. En el primer despliegue Render solo solicita `ADMIN_PASSWORD`; `DATABASE_URL` se conecta automáticamente y Render genera `ADMIN_SESSION_SECRET` y `DOWNLOAD_SECRET`. OpenAI y Stripe se añaden después desde las variables del servicio, cuando la URL pública ya existe.
 
 ## Seguridad de compra
 
-La página pública nunca decide el precio. `/buy/:slug` obtiene el precio desde PostgreSQL y crea Stripe Checkout en servidor. Después del pago, `/api/delivery/confirm` consulta Stripe, registra el pedido y entrega un token HMAC temporal. `/download/:token` vuelve a verificar la compra antes de generar el HTML completo.
+La página pública nunca decide el precio. `/buy/:slug` obtiene el precio desde PostgreSQL y crea Stripe Checkout en servidor. Después del pago, `/api/delivery/confirm` consulta Stripe, registra el pedido y entrega un token HMAC temporal. `/download/:token` vuelve a verificar la compra antes de generar el HTML completo. El webhook procesa pagos instantáneos y confirmaciones asíncronas de Checkout.
 
 ## Autopilot
 
