@@ -1,0 +1,28 @@
+{
+  "name": "revenuepilot",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node src/server.mjs",
+    "check": "node --check src/server.mjs && node --check src/ai.mjs && node --check src/db.mjs && node --check src/product-renderer.mjs && node --check src/autopilot-core.mjs && node --check src/autopilot.mjs && node --check public/app.js",
+    "autopilot": "node src/autopilot.mjs",
+    "test:renderer": "node scripts/validate-renderer.mjs",
+    "test": "npm run check && npm run test:renderer && npm run test:static",
+    "test:static": "node scripts/validate-static.mjs"
+  },
+  "engines": {
+    "node": "22.x"
+  },
+  "dependencies": {
+    "compression": "^1.8.1",
+    "cookie-parser": "^1.4.7",
+    "dotenv": "^17.2.2",
+    "express": "^5.1.0",
+    "express-rate-limit": "^8.1.0",
+    "helmet": "^8.1.0",
+    "openai": "^6.0.0",
+    "pg": "^8.16.3",
+    "stripe": "^22.4.0"
+  }
+}
