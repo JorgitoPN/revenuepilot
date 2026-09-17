@@ -2,6 +2,8 @@
 
 Sistema full-stack para investigar oportunidades de mercado, generar herramientas digitales verticales, preparar su distribución y venderlas con Stripe.
 
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/JorgitoPN/revenuepilot)
+
 ## Flujo
 
 `Web Search → Evidencia → Scoring → QA → Product Factory → Runtime → Distribution → Publish → Stripe → Delivery`
@@ -37,7 +39,7 @@ Lee [`PRODUCTION_CHECKLIST.md`](./PRODUCTION_CHECKLIST.md).
 
 ### Base de datos
 
-RevenuePilot usa PostgreSQL estándar. Para producción puede usar Supabase mediante su connection string/pooler como `DATABASE_URL`; no requiere SDK de Supabase ni cambios de código. Usa un proyecto independiente de BarLive.
+RevenuePilot usa PostgreSQL estándar. El Blueprint de Render enlaza automáticamente `DATABASE_URL` con la base separada `revenuepilot-db`. Para producción permanente puede sustituirse por Supabase/PostgreSQL sin cambios de código. No reutilizar BarLive.
 
 ### Render
 
@@ -46,7 +48,9 @@ RevenuePilot usa PostgreSQL estándar. Para producción puede usar Supabase medi
 - Build: `npm install --no-audit --no-fund`
 - Start: `npm start`
 - Health: `/health`
-- Región recomendada: Frankfurt
+- Región: Frankfurt
+
+El botón **Deploy to Render** usa el `render.yaml` del repositorio. En el primer despliegue Render solicitará únicamente los secretos marcados con `sync: false`.
 
 ## Seguridad de compra
 
