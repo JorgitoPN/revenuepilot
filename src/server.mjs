@@ -17,7 +17,7 @@ import { runAutopilot } from "./autopilot-core.mjs";
 
 const app = express();
 const PORT = Number(process.env.PORT || 3000);
-const BASE_URL = process.env.PUBLIC_BASE_URL || `http://localhost:${PORT}`;
+const BASE_URL = process.env.PUBLIC_BASE_URL || (process.env.RENDER_EXTERNAL_HOSTNAME ? `https://${process.env.RENDER_EXTERNAL_HOSTNAME}` : `http://localhost:${PORT}`);
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "";
 const ADMIN_SECRET = process.env.ADMIN_SESSION_SECRET || "";
 const STRIPE_KEY = process.env.STRIPE_SECRET_KEY || "";
@@ -118,11 +118,11 @@ app.get("/api/preflight",adminOnly,async(req,res)=>{
   const checks=[
     {key:"database",label:"PostgreSQL",ok:database.ok,detail:database.ok?`${database.database} · PostgreSQL ${database.version}`:database.error},
     {key:"openai",label:"OpenAI API",ok:aiEnabled,detail:aiEnabled?`Modelo ${process.env.OPENAI_MODEL||"gpt-5.6"}`:"OPENAI_API_KEY no configurado"},
-    {key:"stripe",label:"Stripe",ok:Boolean(stripe),detail:stripe?(STRIPE_KEY.startsWith("sk_live_")?"LIVE":"TEST"):'STRIPE_SECRET_KEY no configurado'},
-    {key:"webhook",label:"Stripe webhook",ok:Boolean(STRIPE_WEBHOOK_SECRET),detail:STRIPE_WEBHOOK_SECRET?'Secreto configurado':'STRIPE_WEBHOOK_SECRET no configurado'},
+    {key:"stripe",label:"Stripe",ok:Boolean(stripe),detail:stripe?(STRIPE_KEY.startsWith("sk_live_")?"LIVE":"TEST"):"STRIPE_SECRET_KEY no configurado"},
+    {key:"webhook",label:"Stripe webhook",ok:Boolean(STRIPE_WEBHOOK_SECRET),detail:STRIPE_WEBHOOK_SECRET?"Secreto configurado":"STRIPE_WEBHOOK_SECRET no configurado"},
     {key:"base_url",label:"URL pública",ok:!isProd||BASE_URL.startsWith("https://"),detail:BASE_URL},
-    {key:"admin",label:"Seguridad admin",ok:Boolean(ADMIN_PASSWORD)&&ADMIN_SECRET.length>=32,detail:ADMIN_PASSWORD&&ADMIN_SECRET.length>=32?'OK':'Configura ADMIN_PASSWORD y ADMIN_SESSION_SECRET'},
-    {key:"downloads",label:"Descargas firmadas",ok:DOWNLOAD_SECRET.length>=32,detail:DOWNLOAD_SECRET.length>=32?'OK':'DOWNLOAD_SECRET debe tener 32+ caracteres'}
+    {key:"admin",label:"Seguridad admin",ok:Boolean(ADMIN_PASSWORD)&&ADMIN_SECRET.length>=32,detail:ADMIN_PASSWORD&&ADMIN_SECRET.length>=32?"OK":"Configura ADMIN_PASSWORD y ADMIN_SESSION_SECRET"},
+    {key:"downloads",label:"Descargas firmadas",ok:DOWNLOAD_SECRET.length>=32,detail:DOWNLOAD_SECRET.length>=32?"OK":"DOWNLOAD_SECRET debe tener 32+ caracteres"}
   ];
   res.json({ready:checks.every(c=>c.ok),checks});
 });
@@ -131,7 +131,7 @@ app.get("/api/status",(req,res)=>res.json({
   db:dbEnabled,
   ai:aiEnabled,
   stripe:Boolean(stripe),
-  stripe_mode:STRIPE_KEY.includes("_live_")?'live':STRIPE_KEY?'test':'off',
+  stripe_mode:STRIPE_KEY.includes("_live_")?"live":STRIPE_KEY?"test":"off",
   authenticated:adminOk(req.cookies.rp_admin)
 }));
 
