@@ -10,10 +10,10 @@ services:
     envVars:
       - key: NODE_ENV
         value: production
-      - key: PUBLIC_BASE_URL
-        sync: false
       - key: DATABASE_URL
-        sync: false
+        fromDatabase:
+          name: revenuepilot-db
+          property: connectionString
       - key: OPENAI_API_KEY
         sync: false
       - key: OPENAI_MODEL
