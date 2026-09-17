@@ -14,14 +14,8 @@ services:
         fromDatabase:
           name: revenuepilot-db
           property: connectionString
-      - key: OPENAI_API_KEY
-        sync: false
       - key: OPENAI_MODEL
         value: gpt-5.6
-      - key: STRIPE_SECRET_KEY
-        sync: false
-      - key: STRIPE_WEBHOOK_SECRET
-        sync: false
       - key: ADMIN_PASSWORD
         sync: false
       - key: ADMIN_SESSION_SECRET
